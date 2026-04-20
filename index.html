@@ -27,27 +27,18 @@
             margin: 20px auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
+            gap: 4px;
         }
 
         .tile {
             background-size: 300% 300%;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            position: relative;
+            transition: transform 0.2s ease, opacity 0.3s ease;
         }
 
-        /* 🧩 puzzle look */
-        .tile::after {
-            content: "🧩";
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 14px;
-        }
-
-        .empty {
-            background: transparent;
+        .tile:active {
+            transform: scale(0.95);
         }
 
         #message {
@@ -60,12 +51,22 @@
             from {opacity: 0;}
             to {opacity: 1;}
         }
+
+        /* ✨ smooth glow effect after solve */
+        .glow {
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #fff; }
+            to { box-shadow: 0 0 20px #ffcc70; }
+        }
     </style>
 </head>
 
 <body>
 
-<h1>🧩 Solve the puzzle to know who sent this…</h1>
+<h1>🧩 A small mystery for you… solve it 😊</h1>
 
 <div id="puzzle"></div>
 
@@ -77,19 +78,23 @@
     <h2>🎉 Happy Birthday 🎉</h2>
 
     <p>
-        May your life be full of peace,<br>
-        smiles and beautiful moments.<br><br>
+        May your days be filled with smiles,<br>
+        your heart with peace,<br>
+        and your life with beautiful moments.<br><br>
         Stay happy… always 💫
     </p>
 </div>
 
-<audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+<!-- 🎵 Good vibes soft piano music -->
+<audio id="music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c6f7c8b7f.mp3?filename=soft-piano-ambient-110624.mp3"></audio>
 
 <script>
     const puzzle = document.getElementById("puzzle");
-    const image = "image.jpg";
 
-    // 👉 ALMOST SOLVED (only last 2 swapped)
+    // 👉 ONLY CHANGE THIS
+    const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
+
+    // almost solved
     let tiles = [1,2,3,4,5,6,7,9,8];
 
     function draw() {
@@ -115,7 +120,7 @@
     }
 
     function move(index) {
-        // swap with neighbor (simple logic)
+        // only last two tiles move (easy solve)
         if (index === 7 || index === 8) {
             [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
             draw();
@@ -126,7 +131,16 @@
     function checkWin() {
         if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
             document.getElementById("message").style.display = "block";
+
+            // 🎵 play music
             document.getElementById("music").play();
+
+            // ✨ add glow effect
+            document.querySelectorAll(".tile").forEach(t => {
+                t.classList.add("glow");
+            });
+
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     }
 
