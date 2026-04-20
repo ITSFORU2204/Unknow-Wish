@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Birthday Mystery 🎁</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(to bottom, #1e1e2f, #000);
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        #puzzle {
+            width: 90vw;
+            max-width: 320px;
+            height: 90vw;
+            max-height: 320px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+
+        .tile {
+            background-size: 300% 300%;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* 🧩 puzzle look */
+        .tile::after {
+            content: "🧩";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 14px;
+        }
+
+        .empty {
+            background: transparent;
+        }
+
+        #message {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🧩 Solve the puzzle to know who sent this…</h1>
+
+<div id="puzzle"></div>
+
+<div id="message">
+    <p>You solved it 😊</p>
+    <p>Not everything needs a name...</p>
+    <p>Some people silently wish you happiness.</p>
+
+    <h2>🎉 Happy Birthday 🎉</h2>
+
+    <p>
+        May your life be full of peace,<br>
+        smiles and beautiful moments.<br><br>
+        Stay happy… always 💫
+    </p>
+</div>
+
+<audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+<script>
+    const puzzle = document.getElementById("puzzle");
+    const image = "image.png";
+
+    // 👉 ALMOST SOLVED (only last 2 swapped)
+    let tiles = [1,2,3,4,5,6,7,9,8];
+
+    function draw() {
+        puzzle.innerHTML = "";
+
+        tiles.forEach((num, index) => {
+            const tile = document.createElement("div");
+
+            tile.className = "tile";
+            tile.style.backgroundImage = `url(${image})`;
+
+            let correctIndex = num - 1;
+
+            let x = (correctIndex % 3) * 50;
+            let y = Math.floor(correctIndex / 3) * 50;
+
+            tile.style.backgroundPosition = `${x}% ${y}%`;
+
+            tile.onclick = () => move(index);
+
+            puzzle.appendChild(tile);
+        });
+    }
+
+    function move(index) {
+        // swap with neighbor (simple logic)
+        if (index === 7 || index === 8) {
+            [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
+            draw();
+            checkWin();
+        }
+    }
+
+    function checkWin() {
+        if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
+            document.getElementById("message").style.display = "block";
+            document.getElementById("music").play();
+        }
+    }
+
+    draw();
+</script>
+
+</body>
+</html>
