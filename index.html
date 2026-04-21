@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>A Small Mystery 🎁</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Fonts -->
@@ -12,7 +11,7 @@
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: #000;
+            background: linear-gradient(to bottom, #1e1e2f, #000);
             color: white;
             text-align: center;
         }
@@ -20,7 +19,7 @@
         h1 {
             margin-top: 20px;
             font-size: 18px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         #puzzle {
@@ -31,9 +30,7 @@
             margin: 20px auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
-            position: relative;
-            z-index: 1;
+            gap: 5px;
         }
 
         .tile {
@@ -47,36 +44,20 @@
             transform: scale(0.95);
         }
 
-        /* background dim */
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-            z-index: 2;
-        }
-
-        /* message ABOVE overlay */
         #message {
             display: none;
-            position: relative;
-            z-index: 3;
             padding: 25px;
-            text-align: center;
             white-space: pre-line;
             font-family: 'Dancing Script', cursive;
             font-size: 22px;
             line-height: 1.8;
             opacity: 0;
-            transition: opacity 2s ease;
+            transition: opacity 1.5s ease;
         }
 
         .show {
-            opacity: 1 !important;
+            display: block;
+            opacity: 1;
         }
 
         .glow {
@@ -85,7 +66,7 @@
 
         @keyframes glow {
             from { box-shadow: 0 0 5px #fff; }
-            to { box-shadow: 0 0 25px #ffcc70; }
+            to { box-shadow: 0 0 20px #ffcc70; }
         }
     </style>
 </head>
@@ -96,88 +77,85 @@
 
 <div id="puzzle"></div>
 
-<div id="overlay"></div>
-
 <div id="message"></div>
 
-<!-- 🎻 Music -->
+<!-- 🎻 Music (reliable link) -->
 <audio id="music" preload="auto">
-    <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_9466c8c5d6.mp3?filename=emotional-piano-ambient-124008.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c6f7c8b7f.mp3?filename=soft-piano-ambient-110624.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-    const puzzle = document.getElementById("puzzle");
-    const messageBox = document.getElementById("message");
-    const overlay = document.getElementById("overlay");
-    const music = document.getElementById("music");
+const puzzle = document.getElementById("puzzle");
+const messageBox = document.getElementById("message");
+const music = document.getElementById("music");
 
-    const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
+const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
 
-    let tiles = [1,2,3,4,5,6,7,9,8];
+// almost solved
+let tiles = [1,2,3,4,5,6,7,9,8];
 
-    function draw() {
-        puzzle.innerHTML = "";
+function draw() {
+    puzzle.innerHTML = "";
 
-        tiles.forEach((num, index) => {
-            const tile = document.createElement("div");
+    tiles.forEach((num, index) => {
+        const tile = document.createElement("div");
 
-            tile.className = "tile";
-            tile.style.backgroundImage = `url(${image})`;
+        tile.className = "tile";
+        tile.style.backgroundImage = `url(${image})`;
 
-            let correctIndex = num - 1;
+        let correctIndex = num - 1;
 
-            let x = (correctIndex % 3) * 50;
-            let y = Math.floor(correctIndex / 3) * 50;
+        let x = (correctIndex % 3) * 50;
+        let y = Math.floor(correctIndex / 3) * 50;
 
-            tile.style.backgroundPosition = `${x}% ${y}%`;
+        tile.style.backgroundPosition = `${x}% ${y}%`;
 
-            tile.onclick = () => move(index);
+        tile.onclick = () => move(index);
 
-            puzzle.appendChild(tile);
+        puzzle.appendChild(tile);
+    });
+}
+
+function move(index) {
+    if (index === 7 || index === 8) {
+        [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
+        draw();
+        checkWin();
+    }
+}
+
+function playMusic() {
+    music.play().catch(() => {
+        // fallback: play on next tap anywhere
+        document.body.addEventListener("click", () => {
+            music.play();
+        }, { once: true });
+    });
+}
+
+function checkWin() {
+    if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
+
+        // glow
+        document.querySelectorAll(".tile").forEach(t => {
+            t.classList.add("glow");
         });
+
+        // play music (after user tap)
+        setTimeout(playMusic, 200);
+
+        // show message
+        setTimeout(() => {
+            messageBox.classList.add("show");
+            typeMessage();
+        }, 500);
+
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
+}
 
-    function move(index) {
-        if (index === 7 || index === 8) {
-            [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
-            draw();
-            checkWin();
-        }
-    }
-
-    function forcePlayMusic() {
-        music.play().catch(() => {
-            document.body.addEventListener("click", () => {
-                music.play();
-            }, { once: true });
-        });
-    }
-
-    function checkWin() {
-        if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
-
-            document.querySelectorAll(".tile").forEach(t => {
-                t.classList.add("glow");
-            });
-
-            setTimeout(forcePlayMusic, 200);
-
-            // dim background
-            setTimeout(() => {
-                overlay.style.opacity = "0.7";
-            }, 400);
-
-            // show message clearly
-            setTimeout(() => {
-                messageBox.style.display = "block";
-                messageBox.classList.add("show");
-                typeMessage();
-            }, 1000);
-        }
-    }
-
-    // ✍️ YOUR PREVIOUS WISH
-    const text = `You solved it 😊
+// ✍️ TYPEWRITER MESSAGE
+const text = `You solved it 😊
 
 Not everything needs a name...
 Some people silently wish you happiness.
@@ -190,17 +168,17 @@ and your life with beautiful moments.
 
 Stay happy… always 💫`;
 
-    let i = 0;
+let i = 0;
 
-    function typeMessage() {
-        if (i < text.length) {
-            messageBox.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typeMessage, 40);
-        }
+function typeMessage() {
+    if (i < text.length) {
+        messageBox.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeMessage, 40);
     }
+}
 
-    draw();
+draw();
 </script>
 
 </body>
