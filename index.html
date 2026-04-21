@@ -34,7 +34,7 @@
             background-size: 300% 300%;
             border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.3s ease;
+            transition: transform 0.2s ease;
         }
 
         .tile:active {
@@ -44,15 +44,10 @@
         #message {
             display: none;
             padding: 20px;
-            animation: fadeIn 2s ease-in-out;
+            text-align: left;
+            white-space: pre-line;
         }
 
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
-
-        /* ✨ smooth glow effect after solve */
         .glow {
             animation: glow 2s infinite alternate;
         }
@@ -70,31 +65,19 @@
 
 <div id="puzzle"></div>
 
-<div id="message">
-    <p>You solved it 😊</p>
-    <p>Not everything needs a name...</p>
-    <p>Some people silently wish you happiness.</p>
+<div id="message"></div>
 
-    <h2>🎉 Happy Birthday 🎉</h2>
-
-    <p>
-        May your days be filled with smiles,<br>
-        your heart with peace,<br>
-        and your life with beautiful moments.<br><br>
-        Stay happy… always 💫
-    </p>
-</div>
-
-<!-- 🎵 Good vibes soft piano music -->
-<audio id="music" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c6f7c8b7f.mp3?filename=soft-piano-ambient-110624.mp3"></audio>
+<!-- 🎻 Violin Music -->
+<audio id="music" preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_4c5e6cfe46.mp3?filename=emotional-violin-ambient-113997.mp3" type="audio/mpeg">
+</audio>
 
 <script>
     const puzzle = document.getElementById("puzzle");
+    const messageBox = document.getElementById("message");
 
-    // 👉 ONLY CHANGE THIS
     const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
 
-    // almost solved
     let tiles = [1,2,3,4,5,6,7,9,8];
 
     function draw() {
@@ -120,7 +103,6 @@
     }
 
     function move(index) {
-        // only last two tiles move (easy solve)
         if (index === 7 || index === 8) {
             [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
             draw();
@@ -130,17 +112,47 @@
 
     function checkWin() {
         if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
-            document.getElementById("message").style.display = "block";
 
-            // 🎵 play music
-            document.getElementById("music").play();
-
-            // ✨ add glow effect
+            // glow effect
             document.querySelectorAll(".tile").forEach(t => {
                 t.classList.add("glow");
             });
 
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            // show message box
+            messageBox.style.display = "block";
+
+            // 🎻 play music
+            const music = document.getElementById("music");
+            setTimeout(() => {
+                music.play().catch(() => {});
+            }, 300);
+
+            // start typing
+            typeMessage();
+        }
+    }
+
+    // ✍️ TYPEWRITER EFFECT
+    const fullText = `You solved it 😊
+
+Not everything needs a name...
+Some people silently wish you happiness.
+
+🎉 Happy Birthday 🎉
+
+May your days be filled with smiles,
+your heart with peace,
+and your life with beautiful moments.
+
+Stay happy… always 💫`;
+
+    let index = 0;
+
+    function typeMessage() {
+        if (index < fullText.length) {
+            messageBox.innerHTML += fullText.charAt(index);
+            index++;
+            setTimeout(typeMessage, 40);
         }
     }
 
