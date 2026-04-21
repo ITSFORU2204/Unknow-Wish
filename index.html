@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>A Small Mystery 🎁</title>
+    <title>Birthday Mystery 🎁</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Poppins&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -19,7 +20,6 @@
         h1 {
             margin-top: 20px;
             font-size: 18px;
-            opacity: 0.9;
         }
 
         #puzzle {
@@ -30,7 +30,7 @@
             margin: 20px auto;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
+            gap: 4px;
         }
 
         .tile {
@@ -46,18 +46,12 @@
 
         #message {
             display: none;
-            padding: 25px;
+            padding: 20px;
+            text-align: left;
             white-space: pre-line;
             font-family: 'Dancing Script', cursive;
-            font-size: 22px;
-            line-height: 1.8;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-        }
-
-        .show {
-            display: block;
-            opacity: 1;
+            font-size: 20px;
+            line-height: 1.7;
         }
 
         .glow {
@@ -73,113 +67,108 @@
 
 <body>
 
-<h1>🧩 Solve this… and you’ll know</h1>
+<h1>🧩 Solve this to know who sent it…</h1>
 
 <div id="puzzle"></div>
 
 <div id="message"></div>
 
-<!-- 🎻 Music (reliable link) -->
+<!-- 🎻 Music -->
 <audio id="music" preload="auto">
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c6f7c8b7f.mp3?filename=soft-piano-ambient-110624.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_4c5e6cfe46.mp3?filename=emotional-violin-ambient-113997.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const puzzle = document.getElementById("puzzle");
-const messageBox = document.getElementById("message");
-const music = document.getElementById("music");
+    const puzzle = document.getElementById("puzzle");
+    const messageBox = document.getElementById("message");
+    const music = document.getElementById("music");
 
-const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
+    const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
 
-// almost solved
-let tiles = [1,2,3,4,5,6,7,9,8];
+    let tiles = [1,2,3,4,5,6,7,9,8];
 
-function draw() {
-    puzzle.innerHTML = "";
+    function draw() {
+        puzzle.innerHTML = "";
 
-    tiles.forEach((num, index) => {
-        const tile = document.createElement("div");
+        tiles.forEach((num, index) => {
+            const tile = document.createElement("div");
 
-        tile.className = "tile";
-        tile.style.backgroundImage = `url(${image})`;
+            tile.className = "tile";
+            tile.style.backgroundImage = `url(${image})`;
 
-        let correctIndex = num - 1;
+            let correctIndex = num - 1;
 
-        let x = (correctIndex % 3) * 50;
-        let y = Math.floor(correctIndex / 3) * 50;
+            let x = (correctIndex % 3) * 50;
+            let y = Math.floor(correctIndex / 3) * 50;
 
-        tile.style.backgroundPosition = `${x}% ${y}%`;
+            tile.style.backgroundPosition = `${x}% ${y}%`;
 
-        tile.onclick = () => move(index);
+            tile.onclick = () => move(index);
 
-        puzzle.appendChild(tile);
-    });
-}
-
-function move(index) {
-    if (index === 7 || index === 8) {
-        [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
-        draw();
-        checkWin();
-    }
-}
-
-function playMusic() {
-    music.play().catch(() => {
-        // fallback: play on next tap anywhere
-        document.body.addEventListener("click", () => {
-            music.play();
-        }, { once: true });
-    });
-}
-
-function checkWin() {
-    if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
-
-        // glow
-        document.querySelectorAll(".tile").forEach(t => {
-            t.classList.add("glow");
+            puzzle.appendChild(tile);
         });
-
-        // play music (after user tap)
-        setTimeout(playMusic, 200);
-
-        // show message
-        setTimeout(() => {
-            messageBox.classList.add("show");
-            typeMessage();
-        }, 500);
-
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
-}
 
-// ✍️ TYPEWRITER MESSAGE
-const text = `You solved it 😊
+    function move(index) {
+        if (index === 7 || index === 8) {
+            [tiles[7], tiles[8]] = [tiles[8], tiles[7]];
+            draw();
+            checkWin();
+        }
+    }
 
-Not everything needs a name...
-Some people silently wish you happiness.
+    function checkWin() {
+        if (tiles.join() === "1,2,3,4,5,6,7,8,9") {
+
+            // glow effect
+            document.querySelectorAll(".tile").forEach(t => {
+                t.classList.add("glow");
+            });
+
+            // show message
+            messageBox.style.display = "block";
+
+            // 🎻 play music (allowed after tap)
+            setTimeout(() => {
+                music.play().catch(() => {});
+            }, 300);
+
+            // start typing
+            typeMessage();
+
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    }
+
+    // ✍️ TYPEWRITER MESSAGE (NEW STYLE)
+    const fullText = `You solved it 😊
+
+Someone… who doesn’t want to be known,
+has something to tell you.
+
+Not everything needs a name,
+but some wishes come from the heart.
 
 🎉 HAPPY BIRTHDAY 🎉
 
-May your days be filled with smiles,
+May your days be filled with happiness,
 your heart with peace,
 and your life with beautiful moments.
 
-Stay happy… always 💫`;
+Keep smiling… always 💫`;
 
-let i = 0;
+    let index = 0;
 
-function typeMessage() {
-    if (i < text.length) {
-        messageBox.innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeMessage, 40);
+    function typeMessage() {
+        if (index < fullText.length) {
+            messageBox.innerHTML += fullText.charAt(index);
+            index++;
+            setTimeout(typeMessage, 40);
+        }
     }
-}
 
-draw();
+    draw();
 </script>
 
 </body>
-</html>
+    </html>
