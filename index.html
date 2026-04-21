@@ -15,7 +15,6 @@
             background: #000;
             color: white;
             text-align: center;
-            overflow-x: hidden;
         }
 
         h1 {
@@ -33,6 +32,8 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 4px;
+            position: relative;
+            z-index: 1;
         }
 
         .tile {
@@ -46,7 +47,7 @@
             transform: scale(0.95);
         }
 
-        /* cinematic dark overlay */
+        /* background dim */
         #overlay {
             position: fixed;
             top: 0;
@@ -55,12 +56,15 @@
             height: 100%;
             background: black;
             opacity: 0;
-            pointer-events: none;
-            transition: opacity 2s ease;
+            transition: opacity 1.5s ease;
+            z-index: 2;
         }
 
+        /* message ABOVE overlay */
         #message {
             display: none;
+            position: relative;
+            z-index: 3;
             padding: 25px;
             text-align: center;
             white-space: pre-line;
@@ -96,7 +100,7 @@
 
 <div id="message"></div>
 
-<!-- 🎻 Emotional Music -->
+<!-- 🎻 Music -->
 <audio id="music" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_9466c8c5d6.mp3?filename=emotional-piano-ambient-124008.mp3" type="audio/mpeg">
 </audio>
@@ -156,41 +160,35 @@
                 t.classList.add("glow");
             });
 
-            // start music
             setTimeout(forcePlayMusic, 200);
 
-            // cinematic fade
+            // dim background
             setTimeout(() => {
-                overlay.style.opacity = "0.8";
-            }, 500);
+                overlay.style.opacity = "0.7";
+            }, 400);
 
-            // show message
+            // show message clearly
             setTimeout(() => {
                 messageBox.style.display = "block";
                 messageBox.classList.add("show");
                 typeMessage();
-            }, 1500);
+            }, 1000);
         }
     }
 
-    const text = `You solved it...
+    // ✍️ YOUR PREVIOUS WISH
+    const text = `You solved it 😊
 
-And now,
-something was waiting for you.
-
-Not every wish comes with a name,
-but some come from a place
-that once cared deeply.
+Not everything needs a name...
+Some people silently wish you happiness.
 
 🎉 HAPPY BIRTHDAY 🎉
 
-May your life be filled with peace,
-your heart with happiness,
-and your days with beautiful moments.
+May your days be filled with smiles,
+your heart with peace,
+and your life with beautiful moments.
 
-Someone…
-somewhere…
-is silently wishing you well 💫`;
+Stay happy… always 💫`;
 
     let i = 0;
 
@@ -198,7 +196,7 @@ is silently wishing you well 💫`;
         if (i < text.length) {
             messageBox.innerHTML += text.charAt(i);
             i++;
-            setTimeout(typeMessage, 45);
+            setTimeout(typeMessage, 40);
         }
     }
 
