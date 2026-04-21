@@ -5,10 +5,13 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Poppins&display=swap" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
-            font-family: Arial;
+            font-family: 'Poppins', sans-serif;
             background: linear-gradient(to bottom, #1e1e2f, #000);
             color: white;
             text-align: center;
@@ -46,6 +49,29 @@
             padding: 20px;
             text-align: left;
             white-space: pre-line;
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        .bold-title {
+            font-weight: bold;
+            font-size: 28px;
+            text-align: center;
+            display: block;
+            margin: 15px 0;
+        }
+
+        #playBtn {
+            display: none;
+            margin-top: 10px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #ffcc70;
+            color: black;
+            font-weight: bold;
+            font-size: 16px;
         }
 
         .glow {
@@ -67,8 +93,10 @@
 
 <div id="message"></div>
 
+<button id="playBtn">Tap to hear message 🎵</button>
+
 <!-- 🎻 Violin Music -->
-<audio id="music" preload="auto">
+<audio id="music">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_4c5e6cfe46.mp3?filename=emotional-violin-ambient-113997.mp3" type="audio/mpeg">
 </audio>
 
@@ -78,6 +106,7 @@
 
     const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
 
+    // almost solved
     let tiles = [1,2,3,4,5,6,7,9,8];
 
     function draw() {
@@ -118,27 +147,22 @@
                 t.classList.add("glow");
             });
 
-            // show message box
             messageBox.style.display = "block";
+            document.getElementById("playBtn").style.display = "inline-block";
 
-            // 🎻 play music
-            const music = document.getElementById("music");
-            setTimeout(() => {
-                music.play().catch(() => {});
-            }, 300);
-
-            // start typing
             typeMessage();
+
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     }
 
-    // ✍️ TYPEWRITER EFFECT
+    // ✍️ TYPEWRITER TEXT
     const fullText = `You solved it 😊
 
 Not everything needs a name...
 Some people silently wish you happiness.
 
-🎉 Happy Birthday 🎉
+🎉 HAPPY BIRTHDAY 🎉
 
 May your days be filled with smiles,
 your heart with peace,
@@ -155,6 +179,11 @@ Stay happy… always 💫`;
             setTimeout(typeMessage, 40);
         }
     }
+
+    // 🎻 Play music on button click
+    document.getElementById("playBtn").onclick = function() {
+        document.getElementById("music").play();
+    };
 
     draw();
 </script>
