@@ -51,27 +51,7 @@
             white-space: pre-line;
             font-family: 'Dancing Script', cursive;
             font-size: 20px;
-            line-height: 1.6;
-        }
-
-        .bold-title {
-            font-weight: bold;
-            font-size: 28px;
-            text-align: center;
-            display: block;
-            margin: 15px 0;
-        }
-
-        #playBtn {
-            display: none;
-            margin-top: 10px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            background: #ffcc70;
-            color: black;
-            font-weight: bold;
-            font-size: 16px;
+            line-height: 1.7;
         }
 
         .glow {
@@ -87,26 +67,24 @@
 
 <body>
 
-<h1>🧩 A small mystery for you… solve it 😊</h1>
+<h1>🧩 Solve this to know who sent it…</h1>
 
 <div id="puzzle"></div>
 
 <div id="message"></div>
 
-<button id="playBtn">Tap to hear message 🎵</button>
-
-<!-- 🎻 Violin Music -->
-<audio id="music">
+<!-- 🎻 Music -->
+<audio id="music" preload="auto">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_4c5e6cfe46.mp3?filename=emotional-violin-ambient-113997.mp3" type="audio/mpeg">
 </audio>
 
 <script>
     const puzzle = document.getElementById("puzzle");
     const messageBox = document.getElementById("message");
+    const music = document.getElementById("music");
 
     const image = "https://raw.githubusercontent.com/ITSFORU2204/Unknow-Wish/main/image.jpg";
 
-    // almost solved
     let tiles = [1,2,3,4,5,6,7,9,8];
 
     function draw() {
@@ -147,28 +125,37 @@
                 t.classList.add("glow");
             });
 
+            // show message
             messageBox.style.display = "block";
-            document.getElementById("playBtn").style.display = "inline-block";
 
+            // 🎻 play music (allowed after tap)
+            setTimeout(() => {
+                music.play().catch(() => {});
+            }, 300);
+
+            // start typing
             typeMessage();
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     }
 
-    // ✍️ TYPEWRITER TEXT
+    // ✍️ TYPEWRITER MESSAGE (NEW STYLE)
     const fullText = `You solved it 😊
 
-Not everything needs a name...
-Some people silently wish you happiness.
+Someone… who doesn’t want to be known,
+has something to tell you.
+
+Not everything needs a name,
+but some wishes come from the heart.
 
 🎉 HAPPY BIRTHDAY 🎉
 
-May your days be filled with smiles,
+May your days be filled with happiness,
 your heart with peace,
 and your life with beautiful moments.
 
-Stay happy… always 💫`;
+Keep smiling… always 💫`;
 
     let index = 0;
 
@@ -179,11 +166,6 @@ Stay happy… always 💫`;
             setTimeout(typeMessage, 40);
         }
     }
-
-    // 🎻 Play music on button click
-    document.getElementById("playBtn").onclick = function() {
-        document.getElementById("music").play();
-    };
 
     draw();
 </script>
